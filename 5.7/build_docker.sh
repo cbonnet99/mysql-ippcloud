@@ -1,0 +1,1 @@
+docker build -t mysql-ipp:0.1 .
