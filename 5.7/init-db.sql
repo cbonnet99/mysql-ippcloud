@@ -18,6 +18,23 @@ CREATE SCHEMA IF NOT EXISTS `workflow` DEFAULT CHARACTER SET utf8;
 USE `workflow` ;
 
 -- -----------------------------------------------------
+-- Table `workflow`.`overlandjob`
+-- -----------------------------------------------------
+CREATE TABLE `overlandjob` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_uid` varbinary(16) NOT NULL,
+  `image_group` varchar(300) NOT NULL,
+  `roadmap_type` int(11) NOT NULL,
+  `roi` varchar(200) DEFAULT NULL,
+  `created` datetime NOT NULL,
+  `queued` datetime DEFAULT NULL,
+  `started` datetime DEFAULT NULL,
+  `done` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+
+
+-- -----------------------------------------------------
 -- Table `workflow`.`job`
 -- -----------------------------------------------------
 CREATE TABLE `job` (
@@ -124,6 +141,37 @@ CREATE TABLE IF NOT EXISTS `workflow`.`result` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `workflow`.`ovl_scaling_job`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `workflow`.`ovl_scaling_job` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `workspace` VARCHAR(256) NOT NULL,
+  `nb_roi` INT NOT NULL,
+  `images` VARCHAR(1024) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `workflow`.`roi_process`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `workflow`.`roi_process` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` INT NOT NULL,
+  `roi_name` VARCHAR(256) NOT NULL,
+  `status` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_roi_process_1`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `workflow`.`ovl_scaling_job` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
