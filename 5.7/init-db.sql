@@ -172,6 +172,42 @@ CREATE TABLE IF NOT EXISTS `workflow`.`roi_process` (
 ENGINE = InnoDB;
 
 
+CREATE TABLE `notification_topic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_uid` varbinary(16) NOT NULL,
+  `topic` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `roi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  `definition` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `harvester_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `roi_id` int(11) NOT NULL,
+  `params` varchar(100) NOT NULL,
+  `bucket` varchar(100) NOT NULL,
+  `satellite` varchar(80) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `harvester_config_roi_id` (`roi_id`),
+  CONSTRAINT `harvester_config_ibfk_1` FOREIGN KEY (`roi_id`) REFERENCES `roi` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `harvester_synchro` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `synchro_config_id` int(11) NOT NULL,
+  `is_synchronized` tinyint(1) NOT NULL,
+  `begin` datetime NOT NULL,
+  `end` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `harvester_synchro_synchro_config_id` (`synchro_config_id`),
+  CONSTRAINT `harvester_synchro_ibfk_1` FOREIGN KEY (`synchro_config_id`) REFERENCES `harvester_config` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
